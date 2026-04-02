@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
@@ -17,6 +18,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform pies;
     [SerializeField] private float distanciaSuelo;
     [SerializeField] private LayerMask queEsSaltable;
+    [SerializeField] private InputActionReference move;
+    [SerializeField] private InputActionReference attack;
+    [SerializeField] private InputActionReference jump;
+    private Vector2 moveDirection;
 
 
     [Header("Sistema de combate")]
@@ -47,8 +52,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         Movimiento();
-        Saltar();
-        LanzarAtaque();
+        moveDirection = move.action.ReadValue<Vector2>();
+
         vidas.text = sistemaVidas.Vidas.ToString("0");
         vidasIniciales = sistemaVidas.Vidas;
 
@@ -64,13 +69,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void LanzarAtaque()
+    private void LanzarAtaque(InputAction.CallbackContext obj)
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            anim.SetTrigger("attack");
-        }
+
+        anim.SetTrigger("attack");
+
     }
+
     //se ejecuta desde evento de animacion
     private void Ataque()
     {
@@ -82,11 +87,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Saltar()
+    private void Jumping(InputAction.CallbackContext obj)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && EstoyEnSuelo())
+        if (EstoyEnSuelo())
         {
-            rb.AddForce(Vector2.up * fuerzaSalto, ForceMode2D.Impulse);
+            rb.AddForce(new Vector2(0f,fuerzaSalto), ForceMode2D.Impulse);
             anim.SetTrigger("jump");
         }
     }
@@ -98,13 +103,13 @@ public class Player : MonoBehaviour
 
     private void Movimiento()
     {
-        inputH = Input.GetAxisRaw("Horizontal");
-        rb.linearVelocity = new Vector2(inputH * velocidadMovimiento, rb.linearVelocityY);
 
-        if (inputH != 0)//hay movimiento
+        rb.linearVelocity = new Vector2(moveDirection.x * velocidadMovimiento, rb.linearVelocity.y);
+
+        if (moveDirection.x != 0)//hay movimiento
         {
             anim.SetBool("running", true);
-            if (inputH > 0)//movimiento der
+            if (moveDirection.x > 0)//movimiento der
             {
                 transform.eulerAngles = new Vector3(0, 0, 0);
             }
@@ -121,7 +126,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D elOtro)
     {
-        if (elOtro.CompareTag("Gorund"))
+        if (elOtro.CompareTag("Ground"))
         {
             isPlayerInKillZone = true;
         }
@@ -131,5 +136,21 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(puntoAtaque.position, radioAtaque);
+    }
+
+    private void OnEnable()
+    {
+        jump.action.started += Jumping;
+        
+        attack.action.started += LanzarAtaque;
+
+    }
+
+    private void OnDisable()
+    {
+        jump.action.started -= Jumping;
+
+        attack.action.started -= LanzarAtaque;
+
     }
 }

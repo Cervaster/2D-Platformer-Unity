@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Gorund
   - PlayerHitBox
   - DeteccionPlayer
+  - Ground
   layers:
   - Default
   - TransparentFX

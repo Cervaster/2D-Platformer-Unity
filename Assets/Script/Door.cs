@@ -1,26 +1,31 @@
+using System.Runtime.CompilerServices;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class Door : MonoBehaviour
 {
     private bool isPlayerInDoor = false;
     [SerializeField] private TextMeshProUGUI mensaje;
+    [SerializeField] private InputActionReference interac;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mensaje.gameObject.SetActive(false); 
+        mensaje.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
-    void Update()
+ 
+    private void Interaction(InputAction.CallbackContext obj)
     {
         if (SceneManager.GetActiveScene().name == "Level1")
         {
             if (Input.GetKeyDown(KeyCode.E) && isPlayerInDoor == true)
             {
-                SceneManager.LoadScene("Level2"); 
+                SceneManager.LoadScene("Level2");
             }
         }
 
@@ -28,12 +33,10 @@ public class Door : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E) && isPlayerInDoor == true)
             {
-                SceneManager.LoadScene("GameOver"); 
+                SceneManager.LoadScene("GameOver");
             }
         }
-        
     }
-
     public void Entrar()
     {
         SceneManager.LoadScene("Level1", LoadSceneMode.Single); 
@@ -57,5 +60,15 @@ public class Door : MonoBehaviour
             isPlayerInDoor = false;
             mensaje.gameObject.SetActive(false);
         }
+    }
+
+    private void OnEnable()
+    {
+        interac.action.started += Interaction;
+    }
+
+    private void OnDisable()
+    {
+        interac.action.started -= Interaction;
     }
 }
