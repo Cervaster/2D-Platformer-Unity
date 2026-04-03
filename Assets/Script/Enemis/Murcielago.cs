@@ -61,8 +61,11 @@ public class Murcielago : MonoBehaviour
     {
         if (elOtro.CompareTag("PlayerHitBox"))
         {
-            SistemaVidas sistemasvidas = elOtro.gameObject.GetComponent<SistemaVidas>();
-            sistemasvidas.RecibirDanho(20);
+            SistemaVidas sistemasvidas = elOtro.GetComponentInParent<SistemaVidas>();
+            if (sistemasvidas != null)
+            {
+                sistemasvidas.RecibirDanho(20);
+            }
 
         }
     }

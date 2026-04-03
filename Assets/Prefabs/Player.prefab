@@ -243,7 +243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bce4f6945077db4bbc0d367307474b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidadMovimiento: 5
   fuerzaSalto: 30
   pies: {fileID: 4522639094386779450}
   distanciaSuelo: 0.15
@@ -259,8 +258,6 @@ MonoBehaviour:
   queEsDanhable:
     serializedVersion: 2
     m_Bits: 64
-  vidas: {fileID: 0}
-  killZone: {fileID: 0}
 --- !u!114 &4733563420636178166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vidas: 100
   explosion: {fileID: 6942795737675267058, guid: 840aa76d3e82e2946af84ecff33076f1, type: 3}
+  isPlayer: 1
 --- !u!95 &153428211386484910
 Animator:
   serializedVersion: 7

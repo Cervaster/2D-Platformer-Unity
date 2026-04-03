@@ -7,6 +7,7 @@ public class Platform : MonoBehaviour
     [SerializeField] private float velocidadPlatform;
     private Vector3 destinoActual;
     private int indiceActual = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

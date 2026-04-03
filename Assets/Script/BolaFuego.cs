@@ -19,22 +19,29 @@ public class BolaFuego : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        Destruir();
     }
 
     private void OnTriggerEnter2D(Collider2D elOtro)
     {
         if (elOtro.CompareTag("PlayerHitBox"))
         {
-            SistemaVidas sistemasvidas = elOtro.gameObject.GetComponent<SistemaVidas>();
-            sistemasvidas.RecibirDanho(20);
+            SistemaVidas sistemasvidas = elOtro.GetComponentInParent<SistemaVidas>();
+            if (sistemasvidas != null)
+            {
+                sistemasvidas.RecibirDanho(20);
+            }
             
             Destroy(this.gameObject);
             Instantiate(explosionPrefab, this.transform.position, Quaternion.identity);
         }
+    }
+
+    private void Destruir()
+    {
+        Destroy(this.gameObject,5f);
     }
 
 }

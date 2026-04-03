@@ -9,11 +9,10 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private float inputH;
     private Animator anim;
 
     [Header("Sistema de movimiento")]
-    [SerializeField] private float velocidadMovimiento;
+    private float velocidadMov = 10;
     [SerializeField] private float fuerzaSalto;
     [SerializeField] private Transform pies;
     [SerializeField] private float distanciaSuelo;
@@ -21,7 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] private InputActionReference move;
     [SerializeField] private InputActionReference attack;
     [SerializeField] private InputActionReference jump;
-    private Vector2 moveDirection;
+    private Vector2 direccionMov;
 
 
     [Header("Sistema de combate")]
@@ -31,12 +30,10 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask queEsDanhable;
 
     [Header("Sistema de vidas")]
-    [SerializeField] private TextMeshProUGUI vidas;
-    private SistemaVidas sistemaVidas;
     private float vidasIniciales;
 
     [Header("KillZone")]
-    [SerializeField] private GameObject killZone;
+    private GameObject killZone;
     private bool isPlayerInKillZone = false; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -44,26 +41,28 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        sistemaVidas = GetComponent<SistemaVidas>(); // Asignar el componente SistemaVidas
-        
+
+        killZone = GameObject.Find("KillZone");
+
     }
 
     // Update is called once per frame
     void Update()
     {
         Movimiento();
-        moveDirection = move.action.ReadValue<Vector2>();
+        direccionMov = move.action.ReadValue<Vector2>();
 
-        vidas.text = sistemaVidas.Vidas.ToString("0");
-        vidasIniciales = sistemaVidas.Vidas;
+        UIManager.Instance.ActualizarVida(GameManager.Instance.vidas);
+        vidasIniciales = GameManager.Instance.vidas;
 
 
-        if (vidasIniciales <= 20)
+        if (vidasIniciales <= 0)
         {
             isPlayerInKillZone = true; 
         }
         if (isPlayerInKillZone)
         {
+            GameManager.Instance.vidas = 100f; // Reinicia las vidas del jugador
             SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reinicia la escena
             isPlayerInKillZone = false; // Evita recargas múltiples
         }
@@ -87,7 +86,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Jumping(InputAction.CallbackContext obj)
+    private void Saltar(InputAction.CallbackContext obj)
     {
         if (EstoyEnSuelo())
         {
@@ -104,12 +103,12 @@ public class Player : MonoBehaviour
     private void Movimiento()
     {
 
-        rb.linearVelocity = new Vector2(moveDirection.x * velocidadMovimiento, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(direccionMov.x * velocidadMov, rb.linearVelocity.y);
 
-        if (moveDirection.x != 0)//hay movimiento
+        if (direccionMov.x != 0)//si hay movimiento
         {
             anim.SetBool("running", true);
-            if (moveDirection.x > 0)//movimiento der
+            if (direccionMov.x > 0)//movimiento der
             {
                 transform.eulerAngles = new Vector3(0, 0, 0);
             }
@@ -124,6 +123,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    //al entrar a la zona de muerte, se reinicia la escena
     private void OnTriggerEnter2D(Collider2D elOtro)
     {
         if (elOtro.CompareTag("Ground"))
@@ -132,15 +132,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    //se dibuja un gizmo para visualizar el area de ataque en la escena
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(puntoAtaque.position, radioAtaque);
     }
 
+    //sistema de botones de input
     private void OnEnable()
     {
-        jump.action.started += Jumping;
+        jump.action.started += Saltar;
         
         attack.action.started += LanzarAtaque;
 
@@ -148,7 +150,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
-        jump.action.started -= Jumping;
+        jump.action.started -= Saltar;
 
         attack.action.started -= LanzarAtaque;
 

@@ -8,9 +8,4 @@ public class Destruccion : MonoBehaviour
         Destroy(this.gameObject, .5f);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

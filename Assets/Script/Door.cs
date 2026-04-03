@@ -8,14 +8,8 @@ using UnityEngine.SceneManagement;
 public class Door : MonoBehaviour
 {
     private bool isPlayerInDoor = false;
-    [SerializeField] private TextMeshProUGUI mensaje;
     [SerializeField] private InputActionReference interac;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        mensaje.gameObject.SetActive(false);
-    }
 
     // Update is called once per frame
  
@@ -23,7 +17,7 @@ public class Door : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Level1")
         {
-            if (Input.GetKeyDown(KeyCode.E) && isPlayerInDoor == true)
+            if (isPlayerInDoor == true)
             {
                 SceneManager.LoadScene("Level2");
             }
@@ -31,7 +25,7 @@ public class Door : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name == "Level2")
         {
-            if (Input.GetKeyDown(KeyCode.E) && isPlayerInDoor == true)
+            if (isPlayerInDoor == true)
             {
                 SceneManager.LoadScene("GameOver");
             }
@@ -52,13 +46,12 @@ public class Door : MonoBehaviour
         if (elOtro.CompareTag("PlayerHitBox"))
         {
             isPlayerInDoor = true;
-            mensaje.text = "Presiona E para entrar al siguiente nivel";
-            mensaje.gameObject.SetActive(true);
+            UIManager.Instance.ShowDoorMessage("Presiona E para entrar al siguiente nivel");
         }
-        else if (elOtro.CompareTag("PlayerHitBox"))
+        else
         {
             isPlayerInDoor = false;
-            mensaje.gameObject.SetActive(false);
+            UIManager.Instance.HideDoorMessage();
         }
     }
 
