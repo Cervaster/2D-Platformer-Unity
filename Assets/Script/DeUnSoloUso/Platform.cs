@@ -15,11 +15,6 @@ public class Platform : MonoBehaviour
         StartCoroutine(Patrulla());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     IEnumerator Patrulla()
     {
         while (true)

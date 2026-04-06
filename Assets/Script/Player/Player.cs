@@ -82,12 +82,18 @@ public class Player : MonoBehaviour
         foreach (Collider2D item in collidersTocados)
         {
             SistemaVidas sistemaVidas = item.gameObject.GetComponent<SistemaVidas>();
-            sistemaVidas.RecibirDanho(danhoAtaque);
+            if (sistemaVidas != null)
+            {
+                sistemaVidas.RecibirDanho(danhoAtaque);
+            }
+            
         }
     }
 
     private void Saltar(InputAction.CallbackContext obj)
     {
+        transform.SetParent(null);
+
         if (EstoyEnSuelo())
         {
             rb.AddForce(new Vector2(0f,fuerzaSalto), ForceMode2D.Impulse);
@@ -154,5 +160,21 @@ public class Player : MonoBehaviour
 
         attack.action.started -= LanzarAtaque;
 
+    }
+
+    private void OnCollisionEnter2D(Collision2D elOtro)
+    {
+        if (elOtro.gameObject.CompareTag("Platform"))
+        {
+            transform.SetParent(elOtro.transform);
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D elOtro)
+    {
+        if (elOtro.gameObject.CompareTag("Platform"))
+        {
+            transform.SetParent(null);
+        }
     }
 }

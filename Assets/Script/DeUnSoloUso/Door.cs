@@ -7,11 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class Door : MonoBehaviour
 {
-    private bool isPlayerInDoor = false;
+    private bool isPlayerInDoor;
     [SerializeField] private InputActionReference interac;
 
 
-    // Update is called once per frame
  
     private void Interaction(InputAction.CallbackContext obj)
     {
@@ -31,27 +30,27 @@ public class Door : MonoBehaviour
             }
         }
     }
-    public void Entrar()
-    {
-        SceneManager.LoadScene("Level1", LoadSceneMode.Single); 
-    }
-
-    public void Salir()
-    {
-        SceneManager.LoadScene("Menu", LoadSceneMode.Single);
-    }
 
     private void OnTriggerEnter2D(Collider2D elOtro)
     {
+        
         if (elOtro.CompareTag("PlayerHitBox"))
         {
             isPlayerInDoor = true;
             UIManager.Instance.ShowDoorMessage("Presiona E para entrar al siguiente nivel");
+            Debug.Log("El jugador ha entrado en la zona de la puerta.");
         }
-        else
+        
+    }
+    private void OnTriggerExit2D(Collider2D elOtro)
+    {
+        if (elOtro.CompareTag("PlayerHitBox"))
         {
             isPlayerInDoor = false;
-            UIManager.Instance.HideDoorMessage();
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.HideDoorMessage();
+            }      
         }
     }
 

@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            Debug.LogWarning("Se ha intentado crear una instancia adicional de GameManager. Solo debe existir una instancia de GameManager en la escena.");
         }
     }
 }
