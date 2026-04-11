@@ -34,7 +34,12 @@ public class Player : MonoBehaviour
 
     [Header("KillZone")]
     private GameObject killZone;
-    private bool isPlayerInKillZone = false; 
+    private bool isPlayerInKillZone = false;
+
+    [Header("Audio")]
+    private bool move1 = false;
+    private float timeByStep = 0.3f;
+    private float count = 0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -70,9 +75,8 @@ public class Player : MonoBehaviour
 
     private void LanzarAtaque(InputAction.CallbackContext obj)
     {
-
+        AudioManager.Instance.PlayAttackSound();
         anim.SetTrigger("attack");
-
     }
 
     //se ejecuta desde evento de animacion
@@ -85,6 +89,7 @@ public class Player : MonoBehaviour
             if (sistemaVidas != null)
             {
                 sistemaVidas.RecibirDanho(danhoAtaque);
+                AudioManager.Instance.PlayDanhoSound();
             }
             
         }
@@ -98,6 +103,8 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(new Vector2(0f,fuerzaSalto), ForceMode2D.Impulse);
             anim.SetTrigger("jump");
+
+            AudioManager.Instance.PlayJumpSound();
         }
     }
 
@@ -111,6 +118,28 @@ public class Player : MonoBehaviour
 
         rb.linearVelocity = new Vector2(direccionMov.x * velocidadMov, rb.linearVelocity.y);
 
+        // sistema de sonido para los pasos
+        if (direccionMov.x != 0 && EstoyEnSuelo())
+        {
+            count += Time.deltaTime;
+            if (count >= timeByStep)
+            {
+                count = 0f;
+                if (move1)
+                {
+                    AudioManager.Instance.PlayMoveSound();
+                }
+                else
+                {
+                    AudioManager.Instance.PlayMove2Sound();
+                }
+
+                move1 = !move1;
+            }
+                
+        }
+
+        // movimiento del personaje y animaciones
         if (direccionMov.x != 0)//si hay movimiento
         {
             anim.SetBool("running", true);
