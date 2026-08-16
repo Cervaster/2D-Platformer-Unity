@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
         Collider2D[] collidersTocados = Physics2D.OverlapCircleAll(puntoAtaque.position, radioAtaque, queEsDanhable);
         foreach (Collider2D item in collidersTocados)
         {
-            SistemaVidas sistemaVidas = item.gameObject.GetComponent<SistemaVidas>();
+            LifeSystem sistemaVidas = item.gameObject.GetComponent<LifeSystem>();
             if (sistemaVidas != null)
             {
                 sistemaVidas.RecibirDanho(danhoAtaque);

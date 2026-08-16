@@ -62,7 +62,7 @@ public class Slime : MonoBehaviour
     {
         if (elOtro.CompareTag("PlayerHitBox"))
         {
-            SistemaVidas sistemasvidas = elOtro.GetComponentInParent<SistemaVidas>();
+            LifeSystem sistemasvidas = elOtro.GetComponentInParent<LifeSystem>();
             if (sistemasvidas != null)
             {
                 sistemasvidas.RecibirDanho(20);

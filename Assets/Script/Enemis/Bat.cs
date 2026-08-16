@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Murcielago : MonoBehaviour
+public class Bat : MonoBehaviour
 {
     [SerializeField] private Transform[] puntos;
     [SerializeField] private float velocidadPatrulla;
@@ -61,7 +61,7 @@ public class Murcielago : MonoBehaviour
     {
         if (elOtro.CompareTag("PlayerHitBox"))
         {
-            SistemaVidas sistemasvidas = elOtro.GetComponentInParent<SistemaVidas>();
+            LifeSystem sistemasvidas = elOtro.GetComponentInParent<LifeSystem>();
             if (sistemasvidas != null)
             {
                 sistemasvidas.RecibirDanho(20);

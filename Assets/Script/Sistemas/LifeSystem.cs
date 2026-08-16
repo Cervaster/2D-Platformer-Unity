@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SistemaVidas : MonoBehaviour
+public class LifeSystem: MonoBehaviour
 {
     [SerializeField] private float vidas;
     [SerializeField] GameObject explosion;

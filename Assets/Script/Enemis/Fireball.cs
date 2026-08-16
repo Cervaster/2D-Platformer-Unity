@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BolaFuego : MonoBehaviour
+public class Fireball : MonoBehaviour
 {
     private Rigidbody2D rb;
     [SerializeField] private float fuerzaBolaFuego;
@@ -28,7 +28,7 @@ public class BolaFuego : MonoBehaviour
     {
         if (elOtro.CompareTag("PlayerHitBox"))
         {
-            SistemaVidas sistemasvidas = elOtro.GetComponentInParent<SistemaVidas>();
+            LifeSystem sistemasvidas = elOtro.GetComponentInParent<LifeSystem>();
             if (sistemasvidas != null)
             {
                 sistemasvidas.RecibirDanho(20);
